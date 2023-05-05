@@ -21,7 +21,7 @@ with st.sidebar:
 
 st.title('LipNet Full Stack App') 
 # Generating a list of options or videos 
-options = os.listdir(os.path.join('..', 'LipAI', 'app', 's1'))
+options = os.listdir(os.path.join('.\\data\\s1'))
 #print(options)
 
 
