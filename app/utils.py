@@ -5,11 +5,12 @@ import os
 
 vocab = [x for x in "abcdefghijklmnopqrstuvwxyz'?!123456789 "]
 char_to_num = tf.keras.layers.StringLookup(vocabulary=vocab, oov_token="")
+
 # Mapping integers back to original characters
 num_to_char = tf.keras.layers.StringLookup(
     vocabulary=char_to_num.get_vocabulary(), oov_token="", invert=True
 )
-
+#  takes a data path and outputs a list of floats
 def load_video(path:str) -> List[float]: 
     #print(path)
     cap = cv2.VideoCapture(path)
@@ -17,13 +18,14 @@ def load_video(path:str) -> List[float]:
     for _ in range(int(cap.get(cv2.CAP_PROP_FRAME_COUNT))): 
         ret, frame = cap.read()
         frame = tf.image.rgb_to_grayscale(frame)
-        frames.append(frame[190:236,80:220,:])
+        frames.append(frame[190:236,80:220,:]) #static slicing function ; isolating mouth 
     cap.release()
     
     mean = tf.math.reduce_mean(frames)
     std = tf.math.reduce_std(tf.cast(frames, tf.float32))
     return tf.cast((frames - mean), tf.float32) / std
     
+#take in a specific path, open it up and split each line    
 def load_alignments(path:str) -> List[str]: 
     #print(path)
     with open(path, 'r') as f: 
@@ -31,19 +33,26 @@ def load_alignments(path:str) -> List[str]:
     tokens = []
     for line in lines:
         line = line.split()
+
+        # if the line contains silence, ignore
         if line[2] != 'sil': 
             tokens = [*tokens,' ',line[2]]
+
+    # convert them from characters to numbers
     return char_to_num(tf.reshape(tf.strings.unicode_split(tokens, input_encoding='UTF-8'), (-1)))[1:]
 
+
+# takes in the path to video, splits it and converts it
 def load_data(path: str): 
     path = bytes.decode(path.numpy())
+    # File name splitting for mac
     file_name = path.split('/')[-1].split('.')[0]
-    
-    # File name splitting for windows?
-    file_name = path.split('\\')[-1].split('.')[0]
-    video_path = os.path.join(f'{file_name}.mpg')
-    print("video_path",video_path)
-    alignment_path = os.path.join('.', f'{file_name}.align')
+
+    # File name splitting for windows
+    #file_name = path.split('\\')[-1].split('.')[0]
+    video_path = os.path.join('data','s1',f'{file_name}.mpg')
+    #print("video_path",video_path)
+    alignment_path = os.path.join('data','alignments','s1',f'{file_name}.align')
     frames = load_video(video_path) 
     alignments = load_alignments(alignment_path)
     

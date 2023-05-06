@@ -1,10 +1,11 @@
+#Designin the Deep Neural Network 
+
 import os 
 import tensorflow as tf
 from tensorflow import keras
 from keras.models import Sequential 
 from keras.layers import Conv3D, LSTM, Dense, Dropout, Bidirectional, MaxPool3D, Activation, Reshape, SpatialDropout3D, BatchNormalization, TimeDistributed, Flatten
 from tensorflow.keras import layers
-
 def load_model() -> Sequential: 
     model = Sequential()
 
@@ -20,7 +21,12 @@ def load_model() -> Sequential:
     model.add(Activation('relu'))
     model.add(MaxPool3D((1,2,2)))
 
+    #x = TimeDistributed(Flatten())
+    #x = layers.Flatten()(TimeDistributed)
+
+
     model.add(TimeDistributed(Flatten()))
+    #model.add(x)
 
     model.add(Bidirectional(LSTM(128, kernel_initializer='Orthogonal', return_sequences=True)))
     model.add(Dropout(.5))
@@ -30,6 +36,6 @@ def load_model() -> Sequential:
 
     model.add(Dense(41, kernel_initializer='he_normal', activation='softmax'))
 
-    model.load_weights(os.path.join('..','models','checkpoint'))
+    model.load_weights(os.path.join('.','models','checkpoint'))
 
     return model
