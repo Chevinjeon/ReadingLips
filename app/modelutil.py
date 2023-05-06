@@ -3,6 +3,7 @@ import tensorflow as tf
 from tensorflow import keras
 from keras.models import Sequential 
 from keras.layers import Conv3D, LSTM, Dense, Dropout, Bidirectional, MaxPool3D, Activation, Reshape, SpatialDropout3D, BatchNormalization, TimeDistributed, Flatten
+from tensorflow.keras import layers
 
 def load_model() -> Sequential: 
     model = Sequential()

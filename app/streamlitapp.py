@@ -1,12 +1,13 @@
 # Import all the dependencies
 import streamlit as st
 import os 
-import imageio 
-
+import imageio
+import sys
 
 import tensorflow as tf 
 from utils import load_data, num_to_char
 from modelutil import load_model
+from tensorflow import keras
 
 
 # Set the layout to the streamlit app as wide 
@@ -21,7 +22,7 @@ with st.sidebar:
 
 st.title('LipNet Full Stack App') 
 # Generating a list of options or videos 
-options = os.listdir(os.path.join('.\\data\\s1'))
+options = os.listdir(os.path.join('.', 'data', 's1'))
 #print(options)
 
 
@@ -35,9 +36,8 @@ if options:
     # Rendering the video 
     with col1: 
         st.info('The video below displays the converted video in mp4 format')
-        file_path = os.path.join('..','LipAI','app','s1', selected_video)
+        file_path = os.path.join('data','s1', selected_video)
         os.system(f'ffmpeg -i {file_path} -vcodec libx264 test_video.mp4 -y')
-
         # Rendering the app
         video = open('test_video.mp4', 'rb') 
         video_bytes = video.read() 
@@ -45,7 +45,9 @@ if options:
 
     with col2: 
         st.info('This is all the machine learning model sees when making a prediction')
-        video, annotations = load_data(tf.convert_to_tensor(file_path))
+        print("bbbbbb", file_path)
+        string_tensor_filepath = tf.constant(selected_video)
+        video, annotations = load_data(tf.convert_to_tensor(string_tensor_filepath))
         imageio.mimsave('animation.gif', video, fps=10)
         st.image('animation.gif', width=400) 
 
