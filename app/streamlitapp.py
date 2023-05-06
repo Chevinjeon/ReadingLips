@@ -15,7 +15,7 @@ st.set_page_config(layout='wide')
 # Set up the sidebar
 with st.sidebar: 
     st.image('https://www.onepointltd.com/wp-content/uploads/2020/03/inno2.png')
-    st.title('LipBuddy')
+    st.title('Lip Reading')
     st.info('This application is originally developed from the LipNet deep learning model.')
 
 
