@@ -57,6 +57,7 @@ if options:
         decoder = tf.keras.backend.ctc_decode(yhat, [75], greedy=True)[0][0].numpy()
         st.text(decoder)
 
+# convert prediction to text 
         # Convert prediction to text
         st.info('Decode the raw tokens into words')
         converted_prediction = tf.strings.reduce_join(num_to_char(decoder)).numpy().decode('utf-8')
